@@ -9,6 +9,32 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
+library(rvest)
 ```
 
+
+# load data
+```{r}
+con_01 = read_csv("./data/con_01.csv") %>% 
+  mutate(subject_id = str_replace("con_01", "con_", ""),
+         arm = ifelse(str_detect("con_01", "con") == TRUE, "control", "experimental"))
+           
+read_csv_hw5 = function(x) {
+  read_csv(x) %>% 
+    mutate(name = x)
+}
+
+file_list = list.files("./data/") %>% paste0("./data/", .)
+
+study = map_dfr(file_list, read_csv_hw5) %>% 
+  mutate(arm = ifelse(str_detect(name, "con") == TRUE, "control", "experimental"),
+         subject_id = substr(name, 12, 13)) %>% 
+  gather(key = week, value = value, week_1:week_8) %>% 
+  mutate(week = str_replace(week, "week_", "")) %>% 
+  select(subject_id, arm, week, value) %>% 
+  arrange(subject_id, arm, week)
+
+
+
+```
 
