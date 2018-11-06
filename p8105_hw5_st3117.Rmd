@@ -10,15 +10,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
 library(rvest)
+library(httr)
 ```
 
 
 # load data
-```{r}
-con_01 = read_csv("./data/con_01.csv") %>% 
-  mutate(subject_id = str_replace("con_01", "con_", ""),
-         arm = ifelse(str_detect("con_01", "con") == TRUE, "control", "experimental"))
-           
+```{r Q1_1}
+
 read_csv_hw5 = function(x) {
   read_csv(x) %>% 
     mutate(name = x)
@@ -30,11 +28,39 @@ study = map_dfr(file_list, read_csv_hw5) %>%
   mutate(arm = ifelse(str_detect(name, "con") == TRUE, "control", "experimental"),
          subject_id = substr(name, 12, 13)) %>% 
   gather(key = week, value = value, week_1:week_8) %>% 
-  mutate(week = str_replace(week, "week_", "")) %>% 
+  mutate(week = str_replace(week, "week_", ""),
+         subject_id = as.factor(subject_id),
+         week = as.integer(week)) %>% 
   select(subject_id, arm, week, value) %>% 
   arrange(subject_id, arm, week)
 
 
+```
+
+# plots
+```{r Q1_2}
+
+ggplot(study, aes(x = week, y = value, color = subject_id)) +
+  geom_line() +
+  facet_grid(.~ arm) +
+  labs(
+    title = "Value Change with Time in Control and Experimental Arms",
+    x = "Week",
+    y = "Value"
+    )
 
 ```
+
+The subjects in control arms started at the range of (0, 2.5), and ended up at approximately the same range at 8 week, while the subjects in experimental arms started at the range of (-0.5, 3.75), and ended up at the range of (3.5, 7).
+In other words, there is no apparent change of value with time in control arms, while there is increasing in experimental arm.
+
+
+```{r}
+homicides = 
+  RCurl::getURL("https://raw.githubusercontent.com/washingtonpost/data-homicides/master/homicide-data.csv") %>%
+    read_csv()
+
+
+```
+
 
