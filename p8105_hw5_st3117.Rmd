@@ -125,5 +125,24 @@ baltimore_prop =
 ## Further iteration
 ```{r}
 
+allcity_prop_test = function(x){
+  
+  city_homicides = 
+    count_homicides %>% 
+    filter(city_state == x)
+  
+  prop.test(city_homicides$unsolved_n, city_homicides$total_n) %>% 
+    broom::tidy() %>% 
+    select(estimate, conf.low, conf.high)
+}
+
+city_prop = 
+  tibble(city_state = count_homicides$city_state) %>% 
+  mutate(map(.x = count_homicides$city_state, ~allcity_prop_test(.x))) %>% 
+  unnest
+
+
 ```
+
+
 
