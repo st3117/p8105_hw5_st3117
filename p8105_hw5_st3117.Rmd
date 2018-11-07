@@ -123,7 +123,7 @@ baltimore_prop =
 
 
 ## Further iteration
-```{r}
+```{r further_iteration}
 
 allcity_prop_test = function(x){
   
@@ -141,7 +141,21 @@ city_prop =
   mutate(map(.x = count_homicides$city_state, ~allcity_prop_test(.x))) %>% 
   unnest
 
+```
 
+## plot for estimate
+```{r geompoint}
+
+city_prop %>% 
+  ggplot(aes(x = reorder(city_state, estimate), y = estimate)) +
+    geom_point() +
+    geom_errorbar(aes(ymin = conf.low, ymax = conf.high)) +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 7)) +
+    labs(
+      x = "City",
+      y = "Proportion",
+      title = "Proportion of unsolved cases for cities"
+    )
 ```
 
 
