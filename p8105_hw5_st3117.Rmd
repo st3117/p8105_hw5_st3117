@@ -58,7 +58,7 @@ ggplot(study, aes(x = week, y = value, color = subject_id)) +
 
 ```
 
-The subjects in control arms started at the range of (0, 2.5), and ended up at approximately the same range at 8 week, while the subjects in experimental arms started at the range of (-0.5, 3.75), and ended up at the range of (3.5, 7).
+The subjects in control arms started at the range of (0, 2.5), and ended up at approximately the same range at 8 week, while the subjects in experimental arms started at the range of (-0.5, 3.75), and ended up at the range of (3.5, 7).\
 In other words, there is no apparent change of value with time in control arms, while there is increasing in experimental arm.
 
 ## Problem 2_1 Data Loading
